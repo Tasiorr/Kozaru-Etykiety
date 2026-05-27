@@ -1,0 +1,21 @@
+{
+  "name": "Wysyłki",
+  "short_name": "Wysyłki",
+  "description": "Zarządzanie wysyłkami sklepu",
+  "start_url": "/Kozaru-Etykiety/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1a73e8",
+  "icons": [
+    {
+      "src": "/Kozaru-Etykiety/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/Kozaru-Etykiety/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
