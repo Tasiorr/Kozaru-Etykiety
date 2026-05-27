@@ -5,22 +5,29 @@ function extractFileId(driveUrl) {
   return driveUrl?.match(/\/d\/([a-zA-Z0-9_-]+)/)?.[1] || null;
 }
 
+// Cache QR na czas sesji – obraz ładuje się tylko raz
+const qrCache = new Map();
+
 function QRImage({ fileId, token }) {
-  const [src, setSrc] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [src, setSrc] = useState(() => qrCache.get(fileId) || null);
+  const [loading, setLoading] = useState(!fileId || !qrCache.has(fileId));
   const [error, setError] = useState(false);
 
   useEffect(() => {
     if (!fileId) { setLoading(false); setError(true); return; }
-    let objectUrl;
+    if (qrCache.has(fileId)) { setSrc(qrCache.get(fileId)); setLoading(false); return; }
+
     fetch(`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(r => { if (!r.ok) throw new Error(r.status); return r.blob(); })
-      .then(blob => { objectUrl = URL.createObjectURL(blob); setSrc(objectUrl); })
+      .then(blob => {
+        const url = URL.createObjectURL(blob);
+        qrCache.set(fileId, url);
+        setSrc(url);
+      })
       .catch(() => setError(true))
       .finally(() => setLoading(false));
-    return () => { if (objectUrl) URL.revokeObjectURL(objectUrl); };
   }, [fileId, token]);
 
   if (loading) return (
@@ -35,26 +42,31 @@ function QRImage({ fileId, token }) {
   return <img src={src} alt="Etykieta QR" className="w-full max-w-xs rounded-2xl mx-auto block" />;
 }
 
-export function PackageCard({ pkg, token, onRefresh }) {
+export function PackageCard({ pkg, token, onStatusChange }) {
   const [expanded, setExpanded] = useState(false);
-  const [marking, setMarking] = useState(false);
+  const [pending, setPending] = useState(false);
   const isSent = pkg.status === 'Wysłana';
   const fileId = extractFileId(pkg.labelUrl);
 
   async function handleCheck(e) {
     e.stopPropagation();
-    if (marking) return;
-    setMarking(true);
+    if (pending) return;
+
+    const newStatus = isSent ? 'Nowa' : 'Wysłana';
+    onStatusChange(pkg.id, newStatus); // natychmiastowa zmiana UI
+    setPending(true);
+
     try {
       if (isSent) {
         await markAsNew(pkg.carrier, pkg.rowIndex, token);
       } else {
         await markAsSent(pkg.carrier, pkg.rowIndex, token);
       }
-      onRefresh();
     } catch (err) {
-      alert('Błąd: ' + err.message);
-      setMarking(false);
+      onStatusChange(pkg.id, pkg.status); // cofnij przy błędzie
+      alert('Błąd zapisu: ' + err.message);
+    } finally {
+      setPending(false);
     }
   }
 
@@ -71,7 +83,7 @@ export function PackageCard({ pkg, token, onRefresh }) {
         <input
           type="checkbox"
           checked={isSent}
-          disabled={marking}
+          disabled={pending}
           onClick={handleCheck}
           onChange={() => {}}
           className="w-5 h-5 shrink-0 cursor-pointer accent-blue-500"

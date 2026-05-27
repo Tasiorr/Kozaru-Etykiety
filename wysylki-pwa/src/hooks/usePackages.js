@@ -19,11 +19,16 @@ export function usePackages(carrier, token) {
     }
   }, [carrier, token]);
 
+  // Natychmiastowa zmiana statusu w lokalnym stanie – bez API call
+  const updateStatus = useCallback((id, newStatus) => {
+    setPackages(prev => prev.map(p => p.id === id ? { ...p, status: newStatus } : p));
+  }, []);
+
   useEffect(() => {
     refresh();
     const id = setInterval(refresh, 60_000);
     return () => clearInterval(id);
   }, [refresh]);
 
-  return { packages, loading, error, refresh };
+  return { packages, loading, error, refresh, updateStatus };
 }

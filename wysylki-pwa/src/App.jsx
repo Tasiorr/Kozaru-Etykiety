@@ -9,7 +9,7 @@ import { CARRIERS } from './config';
 export default function App() {
   const { token, login, logout, loading: authLoading } = useAuth();
   const [carrier, setCarrier] = useState(CARRIERS[0]);
-  const { packages, loading, error, refresh } = usePackages(carrier, token);
+  const { packages, loading, error, refresh, updateStatus } = usePackages(carrier, token);
 
   if (!token) {
     return <LoginScreen onLogin={login} loading={authLoading} />;
@@ -44,6 +44,7 @@ export default function App() {
         error={error}
         token={token}
         onRefresh={refresh}
+        onStatusChange={updateStatus}
       />
     </div>
   );

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { PackageCard } from './PackageCard';
 
-export function PackageList({ packages, loading, error, token, onRefresh }) {
+export function PackageList({ packages, loading, error, token, onRefresh, onStatusChange }) {
   const [hideSent, setHideSent] = useState(false);
   const filtered = hideSent ? packages.filter(p => p.status !== 'Wysłana') : packages;
 
@@ -34,7 +34,7 @@ export function PackageList({ packages, loading, error, token, onRefresh }) {
 
       <div className="pb-6">
         {filtered.map(pkg => (
-          <PackageCard key={pkg.id} pkg={pkg} token={token} onRefresh={onRefresh} />
+          <PackageCard key={pkg.id} pkg={pkg} token={token} onStatusChange={onStatusChange} />
         ))}
       </div>
     </div>

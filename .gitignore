@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+.venv
+identyfikator.md
+CLAUDE.md
+Kozaru-Etykiety.code-workspace
+
+# Apps Script – kopiowane ręcznie do Google, nie potrzebne w repo
+apps-script/
+
+# Node
+wysylki-pwa/node_modules/
+wysylki-pwa/dist/
