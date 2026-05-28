@@ -5,22 +5,43 @@ function extractFileId(driveUrl) {
   return driveUrl?.match(/\/d\/([a-zA-Z0-9_-]+)/)?.[1] || null;
 }
 
-// Dostosuj te wartości do pozycji QR kodu na etykiecie Vinted:
-// ZOOM_W / ZOOM_H — wymiary iframe (szerszy = większy zoom)
-// PAN_X — przesunięcie w lewo (ujemna = scrolluj w prawo)
-// PAN_Y — przesunięcie w górę (ujemna = scrolluj w dół, do QR kodu)
-// Szerokość iframe = zoom (im szersza, tym większy QR)
-// PAN_X ujemne = przesuń w prawo strony
-// PAN_Y ujemne = przesuń w dół (skip toolbar Drive)
 const VINTED_ZOOM_W = 1000;
 const VINTED_ZOOM_H = 1200;
 const VINTED_PAN_X  = -575;
 const VINTED_PAN_Y  = -120;
-const VINTED_BOX    = 280; // szerokość = wysokość kwadratu
+const VINTED_BOX    = 280;
+
+// Maksymalnie 4 żywe iframy Drive — powyżej iOS dostaje memory pressure i crashuje
+const MAX_LIVE_PDFS = 4;
+const pdfRegistry   = []; // [{ evict: fn }]
 
 function PDFEmbed({ fileId }) {
+  const [evicted, setEvicted] = useState(false);
+
+  useEffect(() => {
+    if (!fileId) return;
+    setEvicted(false);
+    const entry = { evict: () => setEvicted(true) };
+    pdfRegistry.push(entry);
+    if (pdfRegistry.length > MAX_LIVE_PDFS) {
+      pdfRegistry.shift().evict();
+    }
+    return () => {
+      const idx = pdfRegistry.indexOf(entry);
+      if (idx !== -1) pdfRegistry.splice(idx, 1);
+    };
+  }, [fileId]);
+
   if (!fileId) return (
     <p className="text-sm text-slate-500 text-center py-4">⚠️ Brak etykiety</p>
+  );
+  if (evicted) return (
+    <button
+      onClick={() => setEvicted(false)}
+      className="w-full py-6 text-sm text-blue-400 text-center"
+    >
+      Dotknij, aby załadować etykietę
+    </button>
   );
   return (
     <div
