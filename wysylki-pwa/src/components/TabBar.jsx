@@ -24,12 +24,12 @@ export function TabBar({ active, onChange }) {
                 : 'border-b-2 border-transparent'
               }`}
           >
-            <div className={`w-40 h-8 rounded-lg bg-white flex items-center justify-center transition-opacity ${!isActive && enabled ? 'opacity-70' : 'opacity-100'
+            <div className={`w-20 h-7 sm:w-40 sm:h-8 rounded-lg bg-white flex items-center justify-center transition-opacity ${!isActive && enabled ? 'opacity-70' : 'opacity-100'
               }`}>
               <img
                 src={`${import.meta.env.BASE_URL}logo-${carrier.toLowerCase()}.svg`}
                 alt={carrier}
-                className="w-20 h-5 object-contain block"
+                className="w-14 h-5 sm:w-20 sm:h-5 object-contain block"
                 draggable="false"
               />
             </div>
