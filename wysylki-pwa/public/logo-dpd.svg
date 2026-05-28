@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 110 36">
+  <polygon points="12,18 20,4 28,18 20,32" fill="#DC0032"/>
+  <polygon points="25,18 33,4 41,18 33,32" fill="#414042"/>
+  <polygon points="38,18 46,4 54,18 46,32" fill="#DC0032"/>
+  <text x="60" y="26" font-family="Arial, Helvetica, sans-serif" font-weight="900" font-size="21" fill="#DC0032">dpd</text>
+</svg>

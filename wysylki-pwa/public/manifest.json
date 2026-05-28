@@ -4,8 +4,8 @@
   "description": "Zarządzanie wysyłkami sklepu",
   "start_url": "/Kozaru-Etykiety/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#1a73e8",
+  "background_color": "#0f172a",
+  "theme_color": "#1e293b",
   "icons": [
     {
       "src": "/Kozaru-Etykiety/icon-192.png",
