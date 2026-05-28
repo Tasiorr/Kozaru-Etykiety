@@ -8,6 +8,7 @@ export async function fetchPackages(carrier, token) {
   const res = await fetch(url, {
     headers: { Authorization: `Bearer ${token}` },
   });
+  if (res.status === 400) return []; // zakładka jeszcze nie istnieje w Sheets
   if (!res.ok) throw new Error(`Sheets API ${res.status}`);
   const json = await res.json();
   const rows = json.values || [];
