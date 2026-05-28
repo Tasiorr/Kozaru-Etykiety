@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { markAsSent, markAsNew, markVintedAsSent, markVintedAsNew } from '../api/sheets';
 
 function extractFileId(driveUrl) {
@@ -101,6 +101,8 @@ function addressLine(pkg) {
 export function PackageCard({ pkg, token, onStatusChange }) {
   const [expanded, setExpanded] = useState(false);
   const [pending, setPending] = useState(false);
+  const everExpanded = useRef(false);
+  if (expanded) everExpanded.current = true;
   const isSent    = pkg.status === 'Wysłana';
   const isVinted  = pkg.source === 'vinted';
   const fileId    = extractFileId(pkg.labelUrl);
@@ -212,8 +214,9 @@ export function PackageCard({ pkg, token, onStatusChange }) {
         </button>
       </div>
 
-      {expanded && (
-        <div className="border-t border-slate-700 px-4 py-4 flex flex-col gap-4">
+      {everExpanded.current && (
+        <div className="border-t border-slate-700 px-4 py-4 flex flex-col gap-4"
+             style={{ display: expanded ? undefined : 'none' }}>
           {hasAddress && (
             <div className="text-sm space-y-0.5">
               {pkg.street && <p className="text-slate-300">{pkg.street}</p>}
