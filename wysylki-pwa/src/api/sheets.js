@@ -7,6 +7,7 @@ export async function fetchPackages(carrier, token) {
   const url = `${BASE}/${SPREADSHEET_ID}/values/${encodeURIComponent(range)}`;
   const res = await fetch(url, {
     headers: { Authorization: `Bearer ${token}` },
+    cache: 'no-store',
   });
   if (res.status === 400) return []; // zakładka jeszcze nie istnieje w Sheets
   if (!res.ok) throw new Error(`Sheets API ${res.status}`);
@@ -37,6 +38,7 @@ export async function fetchVintedPackages(token) {
   const url = `${BASE}/${SPREADSHEET_ID}/values/${encodeURIComponent(range)}`;
   const res = await fetch(url, {
     headers: { Authorization: `Bearer ${token}` },
+    cache: 'no-store',
   });
   if (!res.ok) throw new Error(`Sheets API (Vinted) ${res.status}`);
   const json = await res.json();

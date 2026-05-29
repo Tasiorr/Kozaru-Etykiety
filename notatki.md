@@ -44,3 +44,10 @@ Wejdź na console.cloud.google.com → APIs & Services → Credentials → Twój
   processNewEmails  |  Czasowy  |  Co minutę
 
   Żeby zatrzymać: uruchom deleteTriggers() tak samo jak createTrigger().
+
+
+  ● 1. Otwórz Safari (tylko Safari — Chrome na iOS nie pozwala instalować PWA)
+  2. Wejdź na adres aplikacji: https://tasiorr.github.io/Kozaru-Etykiety/
+  3. Kliknij ikonę Udostępnij (kwadrat ze strzałką w górę) na dole ekranu
+  4. Przewiń listę i wybierz Dodaj do ekranu głównego
+  5. Potwierdź nazwę i kliknij Dodaj
