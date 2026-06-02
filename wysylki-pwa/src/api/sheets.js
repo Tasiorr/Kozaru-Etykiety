@@ -15,7 +15,7 @@ export async function fetchPackages(carrier, token) {
   const rows = json.values || [];
   return rows
     .map((row, i) => ({
-      id:             row[11] || `row-${i}`, // L = Gmail ID
+      id:             row[8]  || row[11] || `row-${i}`, // trackingNumber → gmailId → fallback
       timestamp:      row[0]  || '',
       shipDate:       row[1]  || '',
       firstName:      row[2]  || '',
